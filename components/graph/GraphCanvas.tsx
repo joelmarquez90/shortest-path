@@ -32,12 +32,35 @@ export function GraphCanvas({
     return map;
   }, [graph.nodes]);
 
+  // Calculate viewBox based on actual graph bounds with padding
+  const viewBoxData = useMemo(() => {
+    if (graph.nodes.length === 0) {
+      return { minX: 0, minY: 0, width, height };
+    }
+
+    const padding = 60; // Extra padding for labels and node radius
+    const minX = Math.min(...graph.nodes.map(n => n.x)) - padding;
+    const maxX = Math.max(...graph.nodes.map(n => n.x)) + padding;
+    const minY = Math.min(...graph.nodes.map(n => n.y)) - padding;
+    const maxY = Math.max(...graph.nodes.map(n => n.y)) + padding;
+
+    return {
+      minX,
+      minY,
+      width: maxX - minX,
+      height: maxY - minY,
+    };
+  }, [graph.nodes, width, height]);
+
+  const viewBox = `${viewBoxData.minX} ${viewBoxData.minY} ${viewBoxData.width} ${viewBoxData.height}`;
+
   return (
     <svg
       width={width}
       height={height}
       className="bg-slate-50 rounded-lg border border-slate-200"
-      viewBox={`0 0 ${width} ${height}`}
+      viewBox={viewBox}
+      preserveAspectRatio="xMidYMid meet"
     >
       {/* Grid pattern */}
       <defs>
@@ -50,7 +73,13 @@ export function GraphCanvas({
           />
         </pattern>
       </defs>
-      <rect width={width} height={height} fill="url(#grid)" />
+      <rect
+        x={viewBoxData.minX}
+        y={viewBoxData.minY}
+        width={viewBoxData.width}
+        height={viewBoxData.height}
+        fill="url(#grid)"
+      />
 
       {/* Render edges first (behind nodes) */}
       <g className="edges">

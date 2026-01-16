@@ -23,7 +23,7 @@ export function Node({
 
   return (
     <g
-      className="cursor-pointer transition-transform hover:scale-110"
+      className="cursor-pointer"
       onClick={() => onClick?.(node.id)}
     >
       {/* Outer glow for current node */}

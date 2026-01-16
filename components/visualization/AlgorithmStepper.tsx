@@ -92,7 +92,6 @@ export function AlgorithmStepper({
             variant="primary"
             size="md"
             onClick={onPlay}
-            disabled={currentStep >= totalSteps - 1}
             title="Reproducir"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
